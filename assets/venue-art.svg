@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Атмосферная дворцовая площадка вечером">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#15100d"/><stop offset=".48" stop-color="#3d2518"/><stop offset="1" stop-color="#090706"/></linearGradient>
+<radialGradient id="sun" cx="62%" cy="35%" r="45%"><stop stop-color="#e7b968" stop-opacity=".48"/><stop offset=".45" stop-color="#9b6337" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<linearGradient id="palace" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b8894c"/><stop offset="1" stop-color="#4f2f20"/></linearGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="10"/></filter>
+</defs>
+<rect width="1600" height="1000" fill="url(#sky)"/><rect width="1600" height="1000" fill="url(#sun)"/>
+<g fill="#e6b967" opacity=".75"><circle cx="130" cy="130" r="2"/><circle cx="360" cy="190" r="2"/><circle cx="1160" cy="150" r="2.5"/><circle cx="1420" cy="270" r="1.8"/><circle cx="980" cy="90" r="1.6"/></g>
+<g transform="translate(230 300)" fill="url(#palace)" stroke="#d5a85f" stroke-opacity=".35" stroke-width="2">
+<path d="M120 420V150h180V90h120v60h150V55h100v95h150V90h120v60h180v270Z"/>
+<path d="M520 150V20h100v130Z"/><path d="M540 20l30-45 30 45Z"/>
+<g fill="#f2c66f" opacity=".9">
+<rect x="160" y="215" width="34" height="86" rx="15"/><rect x="230" y="215" width="34" height="86" rx="15"/><rect x="345" y="205" width="34" height="96" rx="15"/><rect x="415" y="205" width="34" height="96" rx="15"/><rect x="525" y="195" width="34" height="106" rx="15"/><rect x="595" y="195" width="34" height="106" rx="15"/><rect x="705" y="205" width="34" height="96" rx="15"/><rect x="775" y="205" width="34" height="96" rx="15"/><rect x="890" y="215" width="34" height="86" rx="15"/><rect x="960" y="215" width="34" height="86" rx="15"/>
+</g>
+<g stroke="#e9c578" opacity=".35"><path d="M90 420h1040"/><path d="M100 392h1020"/></g>
+</g>
+<g fill="#070605"><path d="M0 820c180-60 360-50 520 10 160 60 340 50 520-10 190-65 370-65 560 10v170H0Z"/></g>
+<g fill="#17110e" opacity=".95"><path d="M0 680c120-120 170-180 230-360 28 250-20 370-40 480Z"/><path d="M1600 650c-130-100-170-190-220-360-30 250 15 380 45 500Z"/></g>
+<g fill="#ead2ad" opacity=".8"><circle cx="250" cy="790" r="30"/><circle cx="300" cy="820" r="24"/><circle cx="1350" cy="800" r="34"/><circle cx="1300" cy="835" r="22"/></g>
+<ellipse cx="800" cy="690" rx="520" ry="55" fill="#dda95b" opacity=".12" filter="url(#glow)"/>
+</svg>
