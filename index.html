@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080706">
+<title>Александр и Мария — свадебное приглашение</title>
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body class="locked">
+<div class="ambient"></div><div class="noise"></div><button class="music off" id="music" aria-label="Музыка">♪</button>
+<section class="opening" id="opening" data-phase="closed">
+ <div class="opening-bg"></div>
+ <div class="open-wrap">
+  <div class="brandline" id="brandline">Wedding Invitation</div><div class="monogram">A | M</div>
+  <div class="scene" id="scene">
+   <div class="hero-reveal" id="heroReveal"><div class="hero-copy"><div class="kicker">21 июня 2027 · Москва</div><h2><span class="p1">Александр</span><i>и</i><span class="p2">Мария</span></h2><div class="date">21 · 06 · 2027</div><p>День, когда начинается наша вечность. Будем счастливы разделить его с вами.</p></div><div class="hero-scroll">листайте вниз<b>⌄</b></div></div>
+   <div class="envelope" id="envelope">
+    <div class="base"></div>
+    <div class="card-mask" id="cardMask"><article class="card" id="card"><span class="card-corner tl"></span><span class="card-corner br"></span><div class="eyebrow" id="cardEyebrow">Дорогие родные и друзья</div><h1><span class="p1">Александр</span><i>и</i><span class="p2">Мария</span></h1><p id="cardIntro">Приглашаем вас разделить с нами день, который станет началом нашей семейной истории.</p><div class="date-row"><span id="cardMonth">июнь</span><b id="cardDay">21</b><span id="cardYear">2027</span></div><div class="scroll">Листайте вниз</div></article></div>
+    <div class="flap left"></div><div class="flap right"></div><div class="flap bottom"></div><div class="top-wrap" id="topFlap"><div class="face front"></div></div><div class="open-top" id="openTop"></div><div class="emboss l"></div><div class="emboss r"></div>
+    <div class="seams"><i class="seam s1"></i><i class="seam s2"></i><i class="seam s3"></i><i class="seam s4"></i><i class="glow"></i></div><div class="sparkles" id="sparkles"></div>
+    <button class="seal" id="seal" aria-label="Открыть приглашение">A|M</button>
+   </div>
+  </div>
+  <div class="guide" id="guide"><small>Нажмите на печать</small><b>⌄</b></div>
+ </div>
+</section>
+<main class="content" id="content"><div class="wrap">
+ <section class="section paper story"><div class="story-copy"><div class="label">Приглашение</div><h2>Дорогие <i>родные и друзья</i></h2><p>Мы будем бесконечно счастливы разделить с вами самый важный день в нашей жизни. Приглашаем вас на свадьбу, которая состоится 21 июня 2027 года.</p><div class="countdown"><div class="cd"><strong id="cdD">0</strong><span>дней</span></div><div class="cd"><strong id="cdH">0</strong><span>часов</span></div><div class="cd"><strong id="cdM">0</strong><span>минут</span></div><div class="cd"><strong id="cdS">0</strong><span>секунд</span></div></div></div><div class="story-art"></div></section>
+ <section class="section schedule"><div class="schedule-head"><div><div class="label">21 июня 2027</div><h2>Программа дня</h2></div><p>Один красивый вечер — от первой встречи до танцев под любимую музыку.</p></div><div class="timeline" id="timeline"></div></section>
+ <section class="section venue-section"><div class="paper venue-card"><div class="venue-art"><img src="assets/venue-art.jpg" alt="Художественная визуализация площадки"><div class="venue-badge">Место проведения · Москва</div></div><div class="venue-copy"><div class="label">Ресторан-дворец</div><h2 id="venueName">Турандот</h2><p id="venueSub">Торжественный вечер в одном из самых узнаваемых дворцовых интерьеров Москвы — среди золочёной лепнины, хрусталя и мягкого вечернего света.</p><p id="venueAddress"><strong>Москва, Тверской бульвар, 26</strong><br>+7 (495) 739-00-11</p><div class="actions"><a class="btn" id="mapBtn" target="_blank" rel="noopener">Открыть карту</a><a class="btn light" id="phoneBtn">Позвонить</a></div></div></div></section>
+ <section class="section paper details"><div class="details-head"><div class="label">Чтобы вам было удобно</div><h2>Небольшие детали</h2><p>Всё важное — коротко и без лишней формальности.</p></div><div class="detail-grid" id="details"></div></section>
+ <section class="section rsvp"><div class="label">Подтвердите участие до <span id="deadline">1 мая 2027</span></div><h2>RSVP</h2><p>Пожалуйста, дайте нам знать, будете ли вы с нами. Это поможет идеально подготовить этот вечер.</p><button class="rsvp-seal" id="rsvp">RSVP</button><div class="rsvp-foot">Александр & Мария · <span id="footerDate">21 июня 2027</span></div></section>
+</div></main>
+<div class="modal" id="modal" aria-hidden="true"><div class="panel"><div class="panel-head"><div><h3>Подтвердить участие</h3><p>Заполните короткую форму — это займёт меньше минуты.</p></div><button class="close" id="close">×</button></div><form id="form"><label>Ваше имя<input name="name" required placeholder="Например, Анна Смирнова"></label><label>Вы будете с нами?<select name="attend"><option>Да, с радостью</option><option>К сожалению, не смогу</option></select></label><label>Количество гостей<select name="guests"><option>1</option><option>2</option><option>3</option><option>4</option></select></label><label>Любимая песня для танцев<input name="song" placeholder="Артист — трек"></label><label>Комментарий или пожелание<textarea name="comment" placeholder="Напишите, если нам стоит что-то учесть"></textarea></label><button class="submit" type="submit">Отправить ответ</button><div class="status" id="status"></div></form></div></div>
+<script src="assets/content.js"></script>
+<script src="assets/app.js"></script></body></html>
