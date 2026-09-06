@@ -75,10 +75,11 @@
 .opening.is-tracing .envelope{transform:translateZ(12px) scale(1.014)}
 .opening.is-tracing .envelope-aura{opacity:1;transform:scale(1);filter:blur(5px)}
 .opening.is-tracing .light-burst{opacity:.78;transform:scale(1.04)}
-.opening.is-releasing .wax-seal{transform:translate(-50%,-62%) scale(1.48) rotate(-5deg);opacity:0;filter:brightness(1.75) saturate(1.15) blur(8px) drop-shadow(0 0 28px rgba(239,189,100,.72))}
+.opening.is-releasing .wax-seal{transform:translate(-50%,-92%) scale(.72) rotate(-8deg);opacity:0;filter:brightness(1.38) saturate(1.06) blur(3px) drop-shadow(0 0 18px rgba(239,189,100,.48));transition-duration:.46s,.28s,.34s}
 .opening.is-releasing .seal-trigger{opacity:0;pointer-events:none}
 .opening.is-releasing .light-burst{opacity:.18;transform:scale(1.14)}
 .opening.is-flap-half .envelope{transform:translateZ(17px) scale(1.018) rotateX(-.8deg)}
+.opening.is-flap-half .wax-seal{visibility:hidden}
 .opening.is-flap-half .envelope-flap{visibility:visible;opacity:.86;transform:rotateX(78deg) translateZ(4px);filter:brightness(.94) drop-shadow(0 -9px 12px rgba(0,0,0,.17))}
 .opening.is-flap-half .inner-glow{opacity:.42;transform:translateY(10%) scale(.84);filter:blur(11px)}
 .opening.is-opening .envelope-open{opacity:1;filter:brightness(.94)}

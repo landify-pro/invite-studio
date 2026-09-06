@@ -45,6 +45,7 @@ test("the invitation uses the current couple and wedding date",()=>{
 
 test("the released seal and helper effects leave no ghost on the open envelope",()=>{
   assert.match(css,/\.envelope>img\.wax-seal\{inset:auto;left:50%;top:55%;width:24%;height:auto\}/);
+  assert.match(css,/\.opening\.is-flap-half \.wax-seal\{visibility:hidden\}/);
   assert.match(css,/\.opening\.is-releasing \.seal-trigger\{opacity:0;pointer-events:none\}/);
   assert.match(css,/\.opening\.is-opening \.light-burst,\.opening\.is-rising \.light-burst\{opacity:0\}/);
   assert.match(css,/\.opening\.is-opening \.envelope-flap\{opacity:0;visibility:hidden\}/);
