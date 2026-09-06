@@ -40,18 +40,21 @@ function stopMusic(){
 }
 musicBtn.addEventListener("click",()=>audio.paused?startMusic():stopMusic());
 
-function createSparkles(){
+function createSparkles(count=32,spread=1){
   const layer=$("#sparkles");
-  for(let i=0;i<26;i+=1){
+  const maxRadius=Math.min(innerWidth*.42,280)*spread;
+  for(let i=0;i<count;i+=1){
     const particle=document.createElement("i");
     const angle=Math.random()*Math.PI*2;
-    const radius=90+Math.random()*185;
+    const radius=58+Math.random()*maxRadius;
     particle.style.setProperty("--x",`${Math.cos(angle)*radius}px`);
     particle.style.setProperty("--y",`${Math.sin(angle)*radius}px`);
-    particle.style.animationDelay=`${Math.random()*.16}s`;
+    particle.style.setProperty("--size",`${2+Math.random()*4}px`);
+    particle.style.setProperty("--duration",`${1.15+Math.random()*.65}s`);
+    particle.style.animationDelay=`${Math.random()*.22}s`;
+    particle.addEventListener("animationend",()=>particle.remove(),{once:true});
     layer.appendChild(particle);
   }
-  setTimeout(()=>layer.replaceChildren(),1500);
 }
 
 function revealSite(){
@@ -70,27 +73,38 @@ async function playOpening(){
   skip.disabled=true;
   skip.style.opacity="0";
   startMusic();
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){
+    revealSite();
+    return;
+  }
   opening.classList.add("is-reacting");
-  openTitle.textContent="Печать оживает";
-  openSub.textContent="Свет собирается в центре";
-  await wait(430);
+  openTitle.textContent="Печать принимает тепло";
+  openSub.textContent="Ещё одно прикосновение";
+  await wait(360);
   opening.classList.add("is-tracing");
-  openTitle.textContent="Свет проходит по конверту";
-  openSub.textContent="Ещё мгновение";
-  await wait(720);
-  createSparkles();
+  createSparkles(innerWidth<600?26:40,.82);
+  openTitle.textContent="Свет пробуждает письмо";
+  openSub.textContent="Мгновение волшебства";
+  await wait(920);
   opening.classList.add("is-releasing");
   openTitle.textContent="Печать снимается";
-  openSub.textContent="Конверт раскрывается";
-  await wait(520);
+  openSub.textContent="Конверт готов раскрыться";
+  await wait(540);
+  opening.classList.add("is-flap-half");
+  openTitle.textContent="Конверт раскрывается";
+  openSub.textContent="Свет уже внутри";
+  await wait(480);
   opening.classList.add("is-opening");
-  openTitle.textContent="Конверт открыт";
-  openSub.textContent="Приглашение уже внутри";
-  await wait(800);
+  createSparkles(innerWidth<600?18:28,1);
+  await wait(650);
   opening.classList.add("is-rising");
+  openTitle.textContent="Ваше приглашение";
+  openSub.textContent="Михаил и Лиана · 21 июля 2027";
+  await wait(1050);
+  opening.classList.add("is-settled");
   openTitle.textContent="Добро пожаловать";
   openSub.textContent="Этот день мы разделим с вами";
-  await wait(1250);
+  await wait(620);
   revealSite();
 }
 seal.addEventListener("click",playOpening);

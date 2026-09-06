@@ -52,8 +52,26 @@ test("the released seal and helper effects leave no ghost on the open envelope",
 
 test("the open envelope and mobile invitation ornament stay visually contained",()=>{
   assert.match(css,/\.envelope-open\{clip-path:inset\(0 0 22% 0\)\}/);
-  assert.match(css,/\.opening\.is-rising \.opening-card\{transform:translateY\(-34%\) scale\(\.82\)\}/);
+  assert.match(css,/\.opening\.is-rising \.opening-card\{transform:translate3d\(0,-37%,26px\) scale\(\.78\) rotateX\(-1deg\)\}/);
   assert.match(css,/\.invitation-copy:after\{right:-54px;bottom:-48px;width:132px;height:132px/);
+});
+
+test("the opening uses a cinematic multi-stage sequence",()=>{
+  for(const stage of ["is-reacting","is-tracing","is-releasing","is-flap-half","is-opening","is-rising","is-settled"]){
+    assert.match(js,new RegExp(`classList\\.add\\(\"${stage}\"\\)`));
+  }
+  assert.match(html,/class="opening-flash"/);
+  assert.match(html,/class="envelope-aura"/);
+  assert.match(html,/class="inner-glow"/);
+  assert.match(css,/\.opening\.is-flap-half \.envelope-flap/);
+  assert.match(css,/\.opening\.is-opening \.inner-glow/);
+  assert.match(css,/\.opening\.is-rising \.opening-card/);
+  assert.match(css,/\.opening\.is-settled \.opening-card/);
+});
+
+test("the opening respects reduced motion",()=>{
+  assert.match(js,/prefers-reduced-motion: reduce/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\).*\.opening-flash/s);
 });
 
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
