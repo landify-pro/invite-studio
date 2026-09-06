@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#090706">
   <meta name="description" content="Свадебное приглашение Михаила и Лианы — 21 июля 2027 года, Москва.">
-  <meta name="invite-studio-release" content="V15.1-CINEMATIC-OPENING">
+  <meta name="invite-studio-release" content="V16-VIDEO-BRIDGE">
   <meta name="rsvp-endpoint" content="">
   <title>Михаил и Лиана — 21 июля 2027</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +13,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/images/hero-desktop.webp" media="(min-width:821px)">
   <link rel="preload" as="image" href="assets/images/hero-mobile.webp" media="(max-width:820px)">
-  <link rel="stylesheet" href="assets/v12.css?v=15.1">
+  <link rel="preload" as="video" href="assets/video/envelope-opening-mobile.mp4" type="video/mp4" media="(max-width:820px)">
+  <link rel="stylesheet" href="assets/v12.css?v=16">
 </head>
 <body class="is-locked">
   <div class="boot" id="boot" aria-hidden="true"><span>M</span><i></i><span>L</span></div>
@@ -30,6 +31,20 @@
       <img src="assets/images/hero-desktop.webp" alt="">
     </picture>
     <div class="opening-vignette" aria-hidden="true"></div>
+
+    <div class="opening-video-stage" id="openingVideoStage" aria-hidden="true">
+      <video class="opening-video" id="openingVideo" muted playsinline preload="auto" poster="assets/images/envelope-video-poster.webp" tabindex="-1">
+        <source src="assets/video/envelope-opening-mobile.mp4" type="video/mp4">
+      </video>
+      <div class="video-card-bridge" id="videoCardBridge">
+        <div class="video-card-copy">
+          <small>Приглашение на свадьбу</small>
+          <strong><span>Михаил</span><em>и</em><span>Лиана</span></strong>
+          <time datetime="2027-07-21">21 июля 2027</time>
+        </div>
+      </div>
+    </div>
+
     <div class="opening-flash" aria-hidden="true"></div>
     <div class="opening-monogram" aria-hidden="true"><span>M</span><i></i><span>L</span></div>
 
@@ -59,6 +74,7 @@
       </div>
       <button class="skip-opening" id="skip" type="button">Пропустить анимацию</button>
     </div>
+    <button class="video-seal-trigger" id="videoSeal" type="button" aria-label="Открыть приглашение"></button>
   </section>
 
   <main class="site" id="site" aria-hidden="true" inert>
@@ -173,6 +189,6 @@
     </div>
   </div>
 
-  <script src="assets/v12.js?v=15.1"></script>
+  <script src="assets/v12.js?v=16"></script>
 </body>
 </html>

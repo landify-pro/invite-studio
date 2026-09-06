@@ -20,7 +20,7 @@ test("the current page no longer loads base64 runtime sprites",()=>{
 });
 
 test("interactive controls have accessible names",()=>{
-  for(const id of ["seal","skip","musicBtn","menuToggle","rsvpBtn"]){
+  for(const id of ["seal","videoSeal","skip","musicBtn","menuToggle","rsvpBtn"]){
     assert.match(html,new RegExp(`id="${id}"[^>]*(?:aria-label=|>[^<])`));
   }
 });
@@ -73,6 +73,16 @@ test("the opening uses a cinematic multi-stage sequence",()=>{
 test("the opening respects reduced motion",()=>{
   assert.match(js,/prefers-reduced-motion: reduce/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\).*\.opening-flash/s);
+});
+
+test("mobile opening uses the real video and a code-driven card bridge",()=>{
+  assert.match(html,/id="openingVideo"[^>]*muted[^>]*playsinline/);
+  assert.match(html,/assets\/video\/envelope-opening-mobile\.mp4/);
+  assert.match(html,/id="videoCardBridge"/);
+  assert.match(css,/\.opening\.has-mobile-video\.is-bridging \.video-card-bridge/);
+  assert.match(js,/function positionVideoBridge\(\)/);
+  assert.match(js,/function startVideoBridge\(\)/);
+  assert.match(js,/requestVideoFrameCallback/);
 });
 
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
