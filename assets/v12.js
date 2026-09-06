@@ -96,7 +96,7 @@ async function playOpening(){
 seal.addEventListener("click",playOpening);
 skip.addEventListener("click",()=>{if(openingStarted)return;openingStarted=true;startMusic();revealSite()});
 
-const weddingDate=new Date("2027-06-21T17:00:00+03:00");
+const weddingDate=new Date("2027-07-21T17:00:00+03:00");
 const plural=(number,forms)=>{
   const n=Math.abs(number)%100;
   const n1=n%10;

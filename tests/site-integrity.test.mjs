@@ -35,6 +35,20 @@ test("countdown remains readable on its dark panel",()=>{
   assert.match(css,/\.countdown-panel\{color:var\(--ivory\)\}/);
 });
 
+test("the invitation uses the current couple and wedding date",()=>{
+  assert.match(html,/Михаил/);
+  assert.match(html,/Лиана/);
+  assert.match(html,/21 июля 2027/);
+  assert.match(js,/2027-07-21T17:00:00\+03:00/);
+  assert.doesNotMatch(html,/Александр|Мария|21 июня 2027/);
+});
+
+test("the released seal and helper effects leave no ghost on the open envelope",()=>{
+  assert.match(css,/\.opening\.is-releasing \.seal-trigger\{opacity:0;pointer-events:none\}/);
+  assert.match(css,/\.opening\.is-opening \.light-burst,\.opening\.is-rising \.light-burst\{opacity:0\}/);
+  assert.match(css,/\.opening\.is-opening \.envelope-flap\{opacity:0;visibility:hidden\}/);
+});
+
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
   assert.match(js,/if\(rsvpEndpoint\)/);
   assert.match(js,/демонстрационной версии/);
