@@ -50,6 +50,12 @@ test("the released seal and helper effects leave no ghost on the open envelope",
   assert.match(css,/\.opening\.is-opening \.envelope-flap\{opacity:0;visibility:hidden\}/);
 });
 
+test("the open envelope and mobile invitation ornament stay visually contained",()=>{
+  assert.match(css,/\.envelope-open\{clip-path:inset\(0 0 22% 0\)\}/);
+  assert.match(css,/\.opening\.is-rising \.opening-card\{transform:translateY\(-34%\) scale\(\.82\)\}/);
+  assert.match(css,/\.invitation-copy:after\{right:-54px;bottom:-48px;width:132px;height:132px/);
+});
+
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
   assert.match(js,/if\(rsvpEndpoint\)/);
   assert.match(js,/демонстрационной версии/);
