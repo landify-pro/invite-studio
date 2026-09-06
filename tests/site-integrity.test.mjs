@@ -31,6 +31,10 @@ test("responsive and reduced-motion rules are present",()=>{
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });
 
+test("countdown remains readable on its dark panel",()=>{
+  assert.match(css,/\.countdown-panel\{color:var\(--ivory\)\}/);
+});
+
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
   assert.match(js,/if\(rsvpEndpoint\)/);
   assert.match(js,/демонстрационной версии/);
