@@ -4,7 +4,7 @@
 
 ## Текущий релиз
 
-**V18 — Cinematic Petal Video Opening**
+**V19 — Guided Cinematic Video Opening**
 
 Живая версия: https://landify-pro.github.io/invite-studio/
 

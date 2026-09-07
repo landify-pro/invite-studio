@@ -618,3 +618,79 @@ body.is-locked .music-control{opacity:0;pointer-events:none}
   .opening-play:after{animation:none}
   .video-opening .skip-opening{animation:none;opacity:1}
 }
+
+/* V19: refined opening guidance and a contained mobile countdown */
+.opening-play:after{content:none}
+.opening-hint{
+  position:absolute;
+  z-index:13;
+  left:50%;
+  top:calc(49% + clamp(126px,18vmin,210px));
+  width:min(420px,calc(100vw - 40px));
+  display:grid;
+  justify-items:center;
+  gap:7px;
+  transform:translateX(-50%);
+  color:#792735;
+  text-align:center;
+  pointer-events:none;
+  animation:opening-hint-pulse 2.8s ease-in-out infinite;
+  transition:opacity .28s ease,transform .34s ease;
+}
+.opening-hint svg{width:25px;height:34px;overflow:visible}
+.opening-hint path{fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+.opening-hint span{
+  font:italic 500 clamp(16px,1.55vw,20px)/1.25 var(--serif);
+  letter-spacing:.015em;
+  text-wrap:balance;
+  text-shadow:0 1px 10px rgba(255,248,235,.68);
+}
+.video-opening.is-video-playing .opening-hint,
+.video-opening.is-whiteout .opening-hint,
+.video-opening.is-revealing .opening-hint{
+  opacity:0;
+  transform:translateX(-50%) translateY(7px);
+  animation:none;
+}
+.video-opening .skip-opening{display:none!important}
+
+@keyframes opening-hint-pulse{
+  50%{opacity:.62;transform:translateX(-50%) translateY(-4px) scale(.985)}
+}
+
+@media(orientation:portrait){
+  .opening-hint{top:calc(49% + clamp(104px,30vw,142px));width:calc(100vw - 32px);gap:5px}
+  .opening-hint svg{width:22px;height:31px}
+  .opening-hint span{font-size:clamp(15px,4.4vw,18px)}
+}
+
+@media(max-width:560px){
+  .counter{
+    width:min(100%,300px);
+    max-width:none;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+    margin:25px auto;
+  }
+  .counter div{width:100%;min-width:0;overflow:hidden;padding:9px 4px}
+  .counter strong{
+    max-width:100%;
+    font-size:clamp(23px,7vw,30px);
+    line-height:.9;
+    letter-spacing:-.035em;
+    font-variant-numeric:lining-nums tabular-nums;
+  }
+  .counter div:first-child strong{font-size:clamp(21px,6.5vw,28px)}
+  .counter span{font-size:7px;letter-spacing:.06em}
+}
+
+@media(max-width:360px){
+  .counter{width:min(100%,276px);gap:12px}
+  .counter strong{font-size:25px}
+  .counter div:first-child strong{font-size:23px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .video-opening .opening-video-stage{display:block}
+  .opening-hint{animation:none}
+}

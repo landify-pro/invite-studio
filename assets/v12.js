@@ -6,7 +6,6 @@ const opening=$("#opening");
 const openingVideo=$("#openingVideo");
 const site=$("#site");
 const seal=$("#seal");
-const skip=$("#skip");
 const audio=$("#music");
 const musicBtn=$("#musicBtn");
 let openingStarted=false;
@@ -51,7 +50,6 @@ function revealSite({immediate=false}={}){
   cancelAnimationFrame(openingFrame);
   prepareSite();
   body.classList.remove("is-locked");
-  skip.disabled=true;
   seal.disabled=true;
   opening.classList.add(immediate?"is-skip-reveal":"is-revealing");
   setTimeout(()=>{
@@ -64,8 +62,8 @@ function revealSite({immediate=false}={}){
 
 function syncOpeningVideo(){
   if(revealStarted||openingVideo.paused||openingVideo.ended)return;
-  if(openingVideo.currentTime>=5.22)opening.classList.add("is-whiteout");
-  if(openingVideo.currentTime>=5.82){
+  if(openingVideo.currentTime>=5.56)opening.classList.add("is-whiteout");
+  if(openingVideo.currentTime>=5.98){
     revealSite();
     return;
   }
@@ -76,7 +74,6 @@ async function playOpening(){
   if(openingStarted)return;
   openingStarted=true;
   seal.disabled=true;
-  skip.disabled=true;
   startMusic();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches){
     revealSite({immediate:true});
@@ -98,11 +95,6 @@ openingVideo.addEventListener("ended",()=>revealSite());
 openingVideo.addEventListener("error",()=>openingStarted&&revealSite({immediate:true}));
 
 seal.addEventListener("click",playOpening);
-skip.addEventListener("click",()=>{
-  openingStarted=true;
-  startMusic();
-  revealSite({immediate:true});
-});
 
 const weddingDate=new Date("2027-07-21T17:00:00+03:00");
 const plural=(number,forms)=>{

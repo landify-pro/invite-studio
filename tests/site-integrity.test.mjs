@@ -20,7 +20,7 @@ test("the current page no longer loads base64 runtime sprites",()=>{
 });
 
 test("interactive controls have accessible names",()=>{
-  for(const id of ["seal","skip","musicBtn","menuToggle","rsvpBtn"]){
+  for(const id of ["seal","musicBtn","menuToggle","rsvpBtn"]){
     assert.match(html,new RegExp(`id="${id}"[^>]*(?:aria-label=|>[^<])`));
   }
 });
@@ -46,21 +46,23 @@ test("the invitation uses the current couple and wedding date",()=>{
 test("the opening starts on the cinematic envelope video without a floating letter",()=>{
   assert.match(html,/class="opening video-opening"/);
   assert.match(html,/id="openingVideo"[^>]*playsinline[^>]*muted/);
-  assert.match(html,/assets\/video\/envelope-opening-v18\.mp4/);
-  assert.match(html,/assets\/images\/envelope-video-poster-v18\.webp/);
+  assert.match(html,/assets\/video\/envelope-opening-v19\.mp4/);
+  assert.match(html,/assets\/images\/envelope-video-poster-v19\.webp/);
   assert.doesNotMatch(html,/opening-card|screen-flap|fullscreen-seal/);
 });
 
 test("the mobile invitation ornament and countdown stay visually contained",()=>{
   assert.match(css,/\.invitation-copy:after\{right:-54px;bottom:-48px;width:132px;height:132px/);
-  assert.match(css,/\.counter strong\{font-size:clamp\(25px,7vw,34px\)\}/);
+  assert.match(css,/\.counter\{[^}]*width:min\(100%,300px\);[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/s);
+  assert.match(css,/\.counter div:first-child strong\{font-size:clamp\(21px,6\.5vw,28px\)\}/);
+  assert.match(css,/\.counter div\{width:100%;min-width:0;overflow:hidden/);
 });
 
 test("the video opening fills the viewport and dissolves into the site through white",()=>{
   assert.match(css,/\.video-opening \.opening-video\{[^}]*object-fit:cover;[^}]*object-position:50% 50%/s);
   assert.match(js,/await openingVideo\.play\(\)/);
-  assert.match(js,/currentTime>=5\.22/);
-  assert.match(js,/currentTime>=5\.82/);
+  assert.match(js,/currentTime>=5\.56/);
+  assert.match(js,/currentTime>=5\.98/);
   assert.match(css,/\.video-opening\.is-whiteout \.opening-whiteout\{opacity:1\}/);
   assert.match(css,/\.video-opening\.is-revealing \.opening-video-stage\{opacity:0\}/);
 });
@@ -73,6 +75,15 @@ test("the opening respects reduced motion",()=>{
 test("portrait and landscape screens keep the seal-centered video crop",()=>{
   assert.match(css,/\.opening-play\{[^}]*top:49%/s);
   assert.match(css,/@media\(orientation:portrait\).*\.opening-play\{top:49%;width:clamp\(118px,39vw,176px\)\}/s);
+});
+
+test("the opening uses a quiet animated instruction without a skip control",()=>{
+  assert.match(html,/id="openingHint"/);
+  assert.match(html,/Нажмите, чтобы открыть конверт/);
+  assert.match(css,/@keyframes opening-hint-pulse/);
+  assert.match(css,/\.opening-play:after\{content:none\}/);
+  assert.doesNotMatch(html,/id="skip"|>Пропустить</);
+  assert.doesNotMatch(js,/const skip=|skip\.addEventListener/);
 });
 
 test("RSVP supports both configured endpoint and honest demo mode",()=>{
