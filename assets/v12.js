@@ -7,19 +7,10 @@ const boot=$("#boot");
 const opening=$("#opening");
 const site=$("#site");
 const seal=$("#seal");
-const videoSeal=$("#videoSeal");
 const skip=$("#skip");
-const openTitle=$("#openTitle");
-const openSub=$("#openSub");
 const audio=$("#music");
 const musicBtn=$("#musicBtn");
-const openingVideo=$("#openingVideo");
-const openingVideoStage=$("#openingVideoStage");
-const videoCardBridge=$("#videoCardBridge");
-const mobileOpening=matchMedia("(max-width:820px)");
 let openingStarted=false;
-let videoUnavailable=false;
-let bridgeStarted=false;
 
 async function preloadCriticalImages(){
   const images=$$(".opening img, .hero-media img");
@@ -49,7 +40,8 @@ musicBtn.addEventListener("click",()=>audio.paused?startMusic():stopMusic());
 
 function createSparkles(count=32,spread=1){
   const layer=$("#sparkles");
-  const maxRadius=Math.min(innerWidth*.42,280)*spread;
+  if(!layer)return;
+  const maxRadius=Math.min(Math.hypot(innerWidth,innerHeight)*.26,360)*spread;
   for(let i=0;i<count;i+=1){
     const particle=document.createElement("i");
     const angle=Math.random()*Math.PI*2;
@@ -64,152 +56,55 @@ function createSparkles(count=32,spread=1){
   }
 }
 
-function revealSite(){
-  if(opening.classList.contains("is-finished"))return;
-  body.classList.remove("is-locked");
+function prepareSite(){
   site.removeAttribute("inert");
   site.setAttribute("aria-hidden","false");
   site.classList.add("is-ready");
+}
+
+function revealSite(){
+  if(opening.classList.contains("is-finished"))return;
+  prepareSite();
+  body.classList.remove("is-locked");
   opening.classList.add("is-finished");
   skip.disabled=true;
   setTimeout(()=>{
-    openingVideo?.pause();
     opening.hidden=true;
     window.scrollTo({top:0,left:0});
-  },1050);
-}
-
-function syncOpeningMode(){
-  if(openingStarted)return;
-  const canUseVideo=mobileOpening.matches&&!videoUnavailable&&Boolean(openingVideo?.canPlayType("video/mp4"));
-  opening.classList.toggle("has-mobile-video",canUseVideo);
-}
-
-function positionVideoBridge(){
-  if(!openingVideoStage||!videoCardBridge)return;
-  const stageWidth=openingVideoStage.clientWidth;
-  const stageHeight=openingVideoStage.clientHeight;
-  if(!stageWidth||!stageHeight)return;
-  const videoWidth=openingVideo.videoWidth||1080;
-  const videoHeight=openingVideo.videoHeight||1920;
-  const scale=Math.max(stageWidth/videoWidth,stageHeight/videoHeight);
-  const offsetX=(stageWidth-videoWidth*scale)/2;
-  const offsetY=(stageHeight-videoHeight*scale)/2;
-  const finalCard={x:164,y:286,width:752,height:1190};
-  videoCardBridge.style.left=`${offsetX+finalCard.x*scale}px`;
-  videoCardBridge.style.top=`${offsetY+finalCard.y*scale}px`;
-  videoCardBridge.style.width=`${finalCard.width*scale}px`;
-  videoCardBridge.style.height=`${finalCard.height*scale}px`;
-}
-
-function startVideoBridge(){
-  if(bridgeStarted)return;
-  bridgeStarted=true;
-  positionVideoBridge();
-  opening.classList.add("is-bridge-matched");
-  requestAnimationFrame(()=>requestAnimationFrame(()=>opening.classList.add("is-bridging")));
-  setTimeout(()=>opening.classList.add("is-bridge-dissolving"),950);
-  setTimeout(revealSite,1120);
-}
-
-function monitorOpeningVideo(){
-  const bridgeTime=5.35;
-  if("requestVideoFrameCallback" in HTMLVideoElement.prototype){
-    const checkFrame=(_now,metadata)=>{
-      if(metadata.mediaTime>=bridgeTime){startVideoBridge();return}
-      if(!openingVideo.paused&&!openingVideo.ended)openingVideo.requestVideoFrameCallback(checkFrame);
-    };
-    openingVideo.requestVideoFrameCallback(checkFrame);
-  }else{
-    const checkTime=()=>{
-      if(openingVideo.currentTime>=bridgeTime){
-        openingVideo.removeEventListener("timeupdate",checkTime);
-        startVideoBridge();
-      }
-    };
-    openingVideo.addEventListener("timeupdate",checkTime);
-  }
-}
-
-async function playVideoOpening(){
-  positionVideoBridge();
-  opening.classList.add("is-video-playing");
-  openingVideo.currentTime=0;
-  await openingVideo.play();
-  monitorOpeningVideo();
-}
-
-async function playCssOpening(){
-  opening.classList.add("is-reacting");
-  openTitle.textContent="Печать принимает тепло";
-  openSub.textContent="Ещё одно прикосновение";
-  await wait(360);
-  opening.classList.add("is-tracing");
-  createSparkles(innerWidth<600?26:40,.82);
-  openTitle.textContent="Свет пробуждает письмо";
-  openSub.textContent="Мгновение волшебства";
-  await wait(920);
-  opening.classList.add("is-releasing");
-  openTitle.textContent="Печать снимается";
-  openSub.textContent="Конверт готов раскрыться";
-  await wait(540);
-  opening.classList.add("is-flap-half");
-  openTitle.textContent="Конверт раскрывается";
-  openSub.textContent="Свет уже внутри";
-  await wait(480);
-  opening.classList.add("is-opening");
-  createSparkles(innerWidth<600?18:28,1);
-  await wait(650);
-  opening.classList.add("is-rising");
-  openTitle.textContent="Ваше приглашение";
-  openSub.textContent="Михаил и Лиана · 21 июля 2027";
-  await wait(1050);
-  opening.classList.add("is-settled");
-  openTitle.textContent="Добро пожаловать";
-  openSub.textContent="Этот день мы разделим с вами";
-  await wait(620);
-  revealSite();
+  },760);
 }
 
 async function playOpening(){
   if(openingStarted)return;
   openingStarted=true;
   seal.disabled=true;
-  videoSeal.disabled=true;
+  skip.disabled=true;
   startMusic();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches){
     revealSite();
     return;
   }
-  if(opening.classList.contains("has-mobile-video")){
-    try{
-      await playVideoOpening();
-      return;
-    }catch{
-      videoUnavailable=true;
-      opening.classList.remove("has-mobile-video","is-video-playing");
-    }
-  }
-  skip.disabled=true;
-  skip.style.opacity="0";
-  await playCssOpening();
+  prepareSite();
+  opening.classList.add("is-seal-pressed");
+  await wait(260);
+  opening.classList.add("is-unsealing");
+  createSparkles(innerWidth<600?28:42,.78);
+  await wait(330);
+  opening.classList.add("is-envelope-opening");
+  await wait(390);
+  opening.classList.add("is-flashing");
+  createSparkles(innerWidth<600?18:30,1.15);
+  await wait(420);
+  opening.classList.add("is-flash-peak");
+  await wait(240);
+  opening.classList.add("is-revealing");
+  await wait(700);
+  revealSite();
 }
 
-openingVideo?.addEventListener("loadedmetadata",positionVideoBridge);
-openingVideo?.addEventListener("ended",()=>{if(openingStarted&&!bridgeStarted)startVideoBridge()});
-openingVideo?.addEventListener("error",()=>{
-  videoUnavailable=true;
-  if(!openingStarted)syncOpeningMode();
-});
-mobileOpening.addEventListener?.("change",syncOpeningMode);
-addEventListener("resize",()=>{if(!opening.classList.contains("is-bridging"))positionVideoBridge()},{passive:true});
-syncOpeningMode();
-
 seal.addEventListener("click",playOpening);
-videoSeal.addEventListener("click",playOpening);
 skip.addEventListener("click",()=>{
   openingStarted=true;
-  openingVideo?.pause();
   startMusic();
   revealSite();
 });
