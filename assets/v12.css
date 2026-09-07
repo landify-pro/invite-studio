@@ -625,22 +625,22 @@ body.is-locked .music-control{opacity:0;pointer-events:none}
   position:absolute;
   z-index:13;
   left:50%;
-  top:calc(49% + clamp(126px,18vmin,210px));
+  top:calc(49% + clamp(220px,28vh,300px));
   width:min(420px,calc(100vw - 40px));
   display:grid;
   justify-items:center;
-  gap:7px;
+  gap:8px;
   transform:translateX(-50%);
-  color:#792735;
+  color:#6f2030;
   text-align:center;
   pointer-events:none;
   animation:opening-hint-pulse 2.8s ease-in-out infinite;
   transition:opacity .28s ease,transform .34s ease;
 }
-.opening-hint svg{width:25px;height:34px;overflow:visible}
+.opening-hint svg{width:29px;height:40px;overflow:visible}
 .opening-hint path{fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
 .opening-hint span{
-  font:italic 500 clamp(16px,1.55vw,20px)/1.25 var(--serif);
+  font:italic 500 clamp(17px,1.65vw,21px)/1.25 var(--serif);
   letter-spacing:.015em;
   text-wrap:balance;
   text-shadow:0 1px 10px rgba(255,248,235,.68);
@@ -655,11 +655,11 @@ body.is-locked .music-control{opacity:0;pointer-events:none}
 .video-opening .skip-opening{display:none!important}
 
 @keyframes opening-hint-pulse{
-  50%{opacity:.62;transform:translateX(-50%) translateY(-4px) scale(.985)}
+  50%{opacity:.78;transform:translateX(-50%) translateY(-4px) scale(.985)}
 }
 
 @media(orientation:portrait){
-  .opening-hint{top:calc(49% + clamp(104px,30vw,142px));width:calc(100vw - 32px);gap:5px}
+  .opening-hint{top:calc(49% + clamp(125px,34vw,165px));width:calc(100vw - 32px);gap:5px}
   .opening-hint svg{width:22px;height:31px}
   .opening-hint span{font-size:clamp(15px,4.4vw,18px)}
 }
