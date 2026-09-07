@@ -619,7 +619,7 @@ body.is-locked .music-control{opacity:0;pointer-events:none}
   .video-opening .skip-opening{animation:none;opacity:1}
 }
 
-/* V19: refined opening guidance and a contained mobile countdown */
+/* V20: responsive desktop/mobile films, refined guidance and contained countdown */
 .opening-play:after{content:none}
 .opening-hint{
   position:absolute;

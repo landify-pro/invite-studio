@@ -46,9 +46,19 @@ test("the invitation uses the current couple and wedding date",()=>{
 test("the opening starts on the cinematic envelope video without a floating letter",()=>{
   assert.match(html,/class="opening video-opening"/);
   assert.match(html,/id="openingVideo"[^>]*playsinline[^>]*muted/);
-  assert.match(html,/assets\/video\/envelope-opening-v19\.mp4/);
-  assert.match(html,/assets\/images\/envelope-video-poster-v19\.webp/);
+  assert.match(html,/data-desktop-src="assets\/video\/envelope-opening-desktop-v20\.mp4"/);
+  assert.match(html,/data-mobile-src="assets\/video\/envelope-opening-v19\.mp4"/);
+  assert.match(html,/data-desktop-poster="assets\/images\/envelope-video-poster-desktop-v20\.webp"/);
+  assert.match(html,/data-mobile-poster="assets\/images\/envelope-video-poster-v19\.webp"/);
   assert.doesNotMatch(html,/opening-card|screen-flap|fullscreen-seal/);
+});
+
+test("the opening selects a dedicated film for desktop and mobile",()=>{
+  assert.match(js,/matchMedia\("\(max-width:820px\)"\)/);
+  assert.match(js,/openingVideo\.dataset\.mobileSrc/);
+  assert.match(js,/openingVideo\.dataset\.desktopSrc/);
+  assert.match(js,/openingVideo\.poster=poster/);
+  assert.match(js,/openingVideo\.load\(\)/);
 });
 
 test("the mobile invitation ornament and countdown stay visually contained",()=>{

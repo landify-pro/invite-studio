@@ -11,6 +11,21 @@ const musicBtn=$("#musicBtn");
 let openingStarted=false;
 let openingFrame=0;
 let revealStarted=false;
+const mobileOpeningQuery=matchMedia("(max-width:820px)");
+
+function configureOpeningVideo(){
+  if(openingStarted)return;
+  const mobile=mobileOpeningQuery.matches;
+  const source=mobile?openingVideo.dataset.mobileSrc:openingVideo.dataset.desktopSrc;
+  const poster=mobile?openingVideo.dataset.mobilePoster:openingVideo.dataset.desktopPoster;
+  if(openingVideo.getAttribute("src")===source)return;
+  openingVideo.poster=poster;
+  openingVideo.src=source;
+  openingVideo.load();
+}
+
+configureOpeningVideo();
+mobileOpeningQuery.addEventListener?.("change",configureOpeningVideo);
 
 async function preloadCriticalImages(){
   const images=$$(".opening img, .hero-media img");
