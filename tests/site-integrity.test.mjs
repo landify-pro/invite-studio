@@ -43,11 +43,12 @@ test("the invitation uses the current couple and wedding date",()=>{
   assert.doesNotMatch(html,/Александр|Мария|21 июня 2027/);
 });
 
-test("the fullscreen envelope starts without a floating letter or card",()=>{
-  assert.match(html,/class="opening fullscreen-opening"/);
-  assert.doesNotMatch(html,/opening-card|opening-video|video-card-bridge/);
-  assert.match(html,/class="fullscreen-seal"/);
-  assert.match(css,/\.fullscreen-opening\{[^}]*--meet-x:50%;[^}]*--meet-y:48%/s);
+test("the opening starts on the cinematic envelope video without a floating letter",()=>{
+  assert.match(html,/class="opening video-opening"/);
+  assert.match(html,/id="openingVideo"[^>]*playsinline[^>]*muted/);
+  assert.match(html,/assets\/video\/envelope-opening-v18\.mp4/);
+  assert.match(html,/assets\/images\/envelope-video-poster-v18\.webp/);
+  assert.doesNotMatch(html,/opening-card|screen-flap|fullscreen-seal/);
 });
 
 test("the mobile invitation ornament and countdown stay visually contained",()=>{
@@ -55,31 +56,23 @@ test("the mobile invitation ornament and countdown stay visually contained",()=>
   assert.match(css,/\.counter strong\{font-size:clamp\(25px,7vw,34px\)\}/);
 });
 
-test("the opening uses four viewport-native flaps and a cinematic light transition",()=>{
-  for(const flap of ["top","right","bottom","left"]){
-    assert.match(html,new RegExp(`screen-flap-${flap}`));
-    assert.match(css,new RegExp(`\\.screen-flap-${flap}\\{`));
-  }
-  for(const stage of ["is-seal-pressed","is-unsealing","is-envelope-opening","is-flashing","is-flash-peak","is-revealing"]){
-    assert.match(js,new RegExp(`classList\\.add\\(\"${stage}\"\\)`));
-  }
-  assert.match(css,/clip-path:polygon\(0 0,100% 0,var\(--meet-x\) var\(--meet-y\)\)/);
-  assert.match(css,/clip-path:polygon\(100% 0,100% 100%,var\(--meet-x\) var\(--meet-y\)\)/);
-  assert.match(css,/clip-path:polygon\(0 100%,100% 100%,var\(--meet-x\) var\(--meet-y\)\)/);
-  assert.match(css,/clip-path:polygon\(0 0,var\(--meet-x\) var\(--meet-y\),0 100%\)/);
-  assert.match(css,/\.fullscreen-opening\.is-flash-peak \.opening-whiteout/);
+test("the video opening fills the viewport and dissolves into the site through white",()=>{
+  assert.match(css,/\.video-opening \.opening-video\{[^}]*object-fit:cover;[^}]*object-position:50% 50%/s);
+  assert.match(js,/await openingVideo\.play\(\)/);
+  assert.match(js,/currentTime>=5\.22/);
+  assert.match(js,/currentTime>=5\.82/);
+  assert.match(css,/\.video-opening\.is-whiteout \.opening-whiteout\{opacity:1\}/);
+  assert.match(css,/\.video-opening\.is-revealing \.opening-video-stage\{opacity:0\}/);
 });
 
 test("the opening respects reduced motion",()=>{
   assert.match(js,/prefers-reduced-motion: reduce/);
-  assert.match(css,/@media\(prefers-reduced-motion:reduce\).*\.fullscreen-opening/s);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\).*\.video-opening/s);
 });
 
-test("portrait and landscape screens receive dedicated generated paper artwork",()=>{
-  assert.match(html,/paper-embossed-desktop-v17\.webp/);
-  assert.match(html,/paper-embossed-mobile-v17\.webp/);
-  assert.match(css,/@media\(orientation:portrait\).*paper-embossed-mobile-v17\.webp/s);
-  assert.doesNotMatch(js,/openingVideo|requestVideoFrameCallback|positionVideoBridge/);
+test("portrait and landscape screens keep the seal-centered video crop",()=>{
+  assert.match(css,/\.opening-play\{[^}]*top:49%/s);
+  assert.match(css,/@media\(orientation:portrait\).*\.opening-play\{top:49%;width:clamp\(118px,39vw,176px\)\}/s);
 });
 
 test("RSVP supports both configured endpoint and honest demo mode",()=>{

@@ -1,16 +1,17 @@
 const $=(selector,scope=document)=>scope.querySelector(selector);
 const $$=(selector,scope=document)=>[...scope.querySelectorAll(selector)];
-const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-
 const body=document.body;
 const boot=$("#boot");
 const opening=$("#opening");
+const openingVideo=$("#openingVideo");
 const site=$("#site");
 const seal=$("#seal");
 const skip=$("#skip");
 const audio=$("#music");
 const musicBtn=$("#musicBtn");
 let openingStarted=false;
+let openingFrame=0;
+let revealStarted=false;
 
 async function preloadCriticalImages(){
   const images=$$(".opening img, .hero-media img");
@@ -38,40 +39,37 @@ function stopMusic(){
 }
 musicBtn.addEventListener("click",()=>audio.paused?startMusic():stopMusic());
 
-function createSparkles(count=32,spread=1){
-  const layer=$("#sparkles");
-  if(!layer)return;
-  const maxRadius=Math.min(Math.hypot(innerWidth,innerHeight)*.26,360)*spread;
-  for(let i=0;i<count;i+=1){
-    const particle=document.createElement("i");
-    const angle=Math.random()*Math.PI*2;
-    const radius=58+Math.random()*maxRadius;
-    particle.style.setProperty("--x",`${Math.cos(angle)*radius}px`);
-    particle.style.setProperty("--y",`${Math.sin(angle)*radius}px`);
-    particle.style.setProperty("--size",`${2+Math.random()*4}px`);
-    particle.style.setProperty("--duration",`${1.15+Math.random()*.65}s`);
-    particle.style.animationDelay=`${Math.random()*.22}s`;
-    particle.addEventListener("animationend",()=>particle.remove(),{once:true});
-    layer.appendChild(particle);
-  }
-}
-
 function prepareSite(){
   site.removeAttribute("inert");
   site.setAttribute("aria-hidden","false");
   site.classList.add("is-ready");
 }
 
-function revealSite(){
-  if(opening.classList.contains("is-finished"))return;
+function revealSite({immediate=false}={}){
+  if(revealStarted)return;
+  revealStarted=true;
+  cancelAnimationFrame(openingFrame);
   prepareSite();
   body.classList.remove("is-locked");
-  opening.classList.add("is-finished");
   skip.disabled=true;
+  seal.disabled=true;
+  opening.classList.add(immediate?"is-skip-reveal":"is-revealing");
   setTimeout(()=>{
+    opening.classList.add("is-finished");
     opening.hidden=true;
+    openingVideo.pause();
     window.scrollTo({top:0,left:0});
-  },760);
+  },immediate?520:920);
+}
+
+function syncOpeningVideo(){
+  if(revealStarted||openingVideo.paused||openingVideo.ended)return;
+  if(openingVideo.currentTime>=5.22)opening.classList.add("is-whiteout");
+  if(openingVideo.currentTime>=5.82){
+    revealSite();
+    return;
+  }
+  openingFrame=requestAnimationFrame(syncOpeningVideo);
 }
 
 async function playOpening(){
@@ -81,32 +79,29 @@ async function playOpening(){
   skip.disabled=true;
   startMusic();
   if(matchMedia("(prefers-reduced-motion: reduce)").matches){
-    revealSite();
+    revealSite({immediate:true});
     return;
   }
   prepareSite();
-  opening.classList.add("is-seal-pressed");
-  await wait(260);
-  opening.classList.add("is-unsealing");
-  createSparkles(innerWidth<600?28:42,.78);
-  await wait(330);
-  opening.classList.add("is-envelope-opening");
-  await wait(390);
-  opening.classList.add("is-flashing");
-  createSparkles(innerWidth<600?18:30,1.15);
-  await wait(420);
-  opening.classList.add("is-flash-peak");
-  await wait(240);
-  opening.classList.add("is-revealing");
-  await wait(700);
-  revealSite();
+  opening.classList.add("is-video-playing");
+  openingVideo.currentTime=0;
+  try{
+    await openingVideo.play();
+    openingFrame=requestAnimationFrame(syncOpeningVideo);
+  }catch{
+    opening.classList.add("is-whiteout");
+    setTimeout(()=>revealSite(),260);
+  }
 }
+
+openingVideo.addEventListener("ended",()=>revealSite());
+openingVideo.addEventListener("error",()=>openingStarted&&revealSite({immediate:true}));
 
 seal.addEventListener("click",playOpening);
 skip.addEventListener("click",()=>{
   openingStarted=true;
   startMusic();
-  revealSite();
+  revealSite({immediate:true});
 });
 
 const weddingDate=new Date("2027-07-21T17:00:00+03:00");
