@@ -90,6 +90,7 @@ test("the post-opening effect uses all five approved transparent petal assets",(
     assert.match(petals,new RegExp(filename.replaceAll("/","\\/")));
   }
   assert.match(js,/assets\/petals\.js\?v=22/);
+  assert.match(html,/assets\/v12\.js\?v=22/);
   assert.doesNotMatch(petals,/data:image|svgSource|const shapes/);
   assert.match(petals,/assetDeck/);
   assert.match(petals,/routeDeck/);
