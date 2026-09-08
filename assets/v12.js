@@ -238,3 +238,9 @@ const revealObserver=new IntersectionObserver(entries=>{
 $$(".reveal-on-scroll").forEach(section=>revealObserver.observe(section));
 
 preloadCriticalImages();
+
+// V21: load the decorative petals independently of the cinematic opening.
+const petalsScript=document.createElement("script");
+petalsScript.src="assets/petals.js?v=21";
+petalsScript.defer=true;
+document.head.appendChild(petalsScript);
