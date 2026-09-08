@@ -239,8 +239,8 @@ $$(".reveal-on-scroll").forEach(section=>revealObserver.observe(section));
 
 preloadCriticalImages();
 
-// V21: load the decorative petals independently of the cinematic opening.
+// V22: load the approved photographic petals independently of the cinematic opening.
 const petalsScript=document.createElement("script");
-petalsScript.src="assets/petals.js?v=21";
+petalsScript.src="assets/petals.js?v=22";
 petalsScript.defer=true;
 document.head.appendChild(petalsScript);

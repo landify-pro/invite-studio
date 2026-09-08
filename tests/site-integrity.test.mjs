@@ -7,6 +7,7 @@ const root=resolve(import.meta.dirname,"..");
 const html=readFileSync(resolve(root,"index.html"),"utf8");
 const css=readFileSync(resolve(root,"assets/v12.css"),"utf8");
 const js=readFileSync(resolve(root,"assets/v12.js"),"utf8");
+const petals=readFileSync(resolve(root,"assets/petals.js"),"utf8");
 
 test("all local assets referenced by the page exist",()=>{
   const refs=[...html.matchAll(/(?:src|href|srcset)="(assets\/[^"? ]+)/g)].map(match=>match[1]);
@@ -80,6 +81,30 @@ test("the video opening fills the viewport and dissolves into the site through w
 test("the opening respects reduced motion",()=>{
   assert.match(js,/prefers-reduced-motion: reduce/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\).*\.video-opening/s);
+});
+
+test("the post-opening effect uses all five approved transparent petal assets",()=>{
+  for(let index=1;index<=5;index++){
+    const filename=`assets/petals/petal-0${index}.webp`;
+    assert.ok(existsSync(resolve(root,filename)),`Missing ${filename}`);
+    assert.match(petals,new RegExp(filename.replaceAll("/","\\/")));
+  }
+  assert.match(js,/assets\/petals\.js\?v=22/);
+  assert.doesNotMatch(petals,/data:image|svgSource|const shapes/);
+  assert.match(petals,/assetDeck/);
+  assert.match(petals,/routeDeck/);
+});
+
+test("petals start only after the opening and stay outside interaction",()=>{
+  assert.match(petals,/!opening\.hidden/);
+  assert.match(petals,/site\.getAttribute\("aria-hidden"\)/);
+  assert.match(petals,/pointer-events:none/);
+  assert.match(petals,/prefers-reduced-motion: reduce/);
+  assert.match(petals,/visibilitychange/);
+  assert.match(petals,/entry\.element\.remove\(\)/);
+  for(const route of ["left-right","right-left","top-bottom","bottom-top","top-left","top-right","bottom-left","bottom-right"]){
+    assert.match(petals,new RegExp(`"${route}"`));
+  }
 });
 
 test("portrait and landscape screens keep the seal-centered video crop",()=>{
