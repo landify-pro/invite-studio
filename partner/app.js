@@ -2,14 +2,13 @@
   "use strict";
 
   const markets = {
-    top3: 148759,
-    russia: 880000,
+    top3: { size: 148759, label: "Топ-3 города" },
+    russia: { size: 880000, label: "Россия" },
   };
-  const prices = [10000, 15000, 20000];
-  const shares = [0.1, 1, 10];
-  const state = { market: "top3", share: 0.1, price: 15000 };
-
+  const state = { market: "russia", share: 0.1, price: 15000, cost: 2000 };
   const formatInteger = new Intl.NumberFormat("ru-RU");
+  const resultPanel = document.querySelector(".calculator-results");
+
   const formatMoney = (value) => {
     if (value >= 1_000_000_000) {
       return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value / 1_000_000_000)} млрд ₽`;
@@ -20,15 +19,7 @@
     return `${formatInteger.format(value)} ₽`;
   };
 
-  const ordersFor = (marketSize, share) => Math.round(marketSize * share / 100);
-
-  function updateCalculator() {
-    const orders = ordersFor(markets[state.market], state.share);
-    const revenue = orders * state.price;
-    document.querySelector("#revenueResult").textContent = formatMoney(revenue);
-    document.querySelector("#ordersResult").textContent = formatInteger.format(orders);
-    document.querySelector("#monthlyResult").textContent = `≈${formatInteger.format(Math.max(1, Math.round(orders / 12)))}`;
-  }
+  const ordersFor = () => Math.round(markets[state.market].size * state.share / 100);
 
   function selectButton(control, selected) {
     document.querySelectorAll(`[data-control="${control}"] button`).forEach((button) => {
@@ -36,6 +27,35 @@
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
+  }
+
+  function updateCalculator(animate = true) {
+    const orders = ordersFor();
+    const revenue = orders * state.price;
+    const costs = orders * state.cost;
+    const net = Math.max(0, revenue - costs);
+    const partner = Math.round(net * 0.4);
+    const studio = net - partner;
+
+    document.querySelector("#scenarioLabel").textContent = `${markets[state.market].label} · ${String(state.share).replace(".", ",")}% рынка`;
+    document.querySelector("#ordersResult").textContent = formatInteger.format(orders);
+    document.querySelector("#monthlyResult").textContent = `≈${formatInteger.format(Math.max(1, Math.round(orders / 12)))}`;
+    document.querySelector("#revenueResult").textContent = formatMoney(revenue);
+    document.querySelector("#costResult").textContent = formatMoney(costs);
+    document.querySelector("#netResult").textContent = formatMoney(net);
+    document.querySelector("#partnerResult").textContent = formatMoney(partner);
+    document.querySelector("#studioResult").textContent = formatMoney(studio);
+    document.querySelector("#partnerMonthly").textContent = `≈${formatMoney(Math.round(partner / 12))} в месяц`;
+    document.querySelector("#studioMonthly").textContent = `≈${formatMoney(Math.round(studio / 12))} в месяц`;
+
+    document.querySelectorAll("[data-share-jump]").forEach((card) => {
+      card.classList.toggle("active", Number(card.dataset.shareJump) === state.share);
+    });
+
+    if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      resultPanel.classList.remove("is-updating");
+      requestAnimationFrame(() => resultPanel.classList.add("is-updating"));
+    }
   }
 
   document.querySelectorAll("[data-control] button").forEach((button) => {
@@ -48,16 +68,17 @@
     });
   });
 
-  function renderMatrix(target, marketSize) {
-    const body = document.querySelector(target);
-    body.innerHTML = shares.map((share) => {
-      const orders = ordersFor(marketSize, share);
-      const cells = prices.map((price) => `<td>${formatMoney(orders * price)}</td>`).join("");
-      return `<tr><td><strong>${String(share).replace(".", ",")}%</strong><small>${formatInteger.format(orders)} заказов</small></td>${cells}</tr>`;
-    }).join("");
-  }
+  document.querySelectorAll("[data-share-jump]").forEach((card) => {
+    card.addEventListener("click", () => {
+      state.market = "russia";
+      state.share = Number(card.dataset.shareJump);
+      selectButton("market", state.market);
+      selectButton("share", state.share);
+      updateCalculator();
+      document.querySelector("#calculator").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    });
+  });
 
-  renderMatrix("#top3Table", markets.top3);
-  renderMatrix("#russiaTable", markets.russia);
-  updateCalculator();
+  resultPanel.addEventListener("animationend", () => resultPanel.classList.remove("is-updating"));
+  updateCalculator(false);
 })();
