@@ -1,25 +1,29 @@
 (() => {
   "use strict";
 
-  const markets = {
-    top3: { size: 148759, label: "Топ-3 города" },
-    russia: { size: 880000, label: "Россия" },
-  };
-  const state = { market: "russia", share: 0.1, price: 15000, cost: 2000 };
-  const formatInteger = new Intl.NumberFormat("ru-RU");
-  const resultPanel = document.querySelector(".calculator-results");
+  const MARKET_SIZE = 880000;
+  const PARTNER_SHARE = 0.4;
+  const state = { orders: 150, price: 15000, cost: 2000 };
+  const resultPanel = document.querySelector(".calculator-result");
+  const integer = new Intl.NumberFormat("ru-RU");
 
   const formatMoney = (value) => {
-    if (value >= 1_000_000_000) {
-      return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value / 1_000_000_000)} млрд ₽`;
-    }
-    if (value >= 1_000_000) {
-      return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value / 1_000_000)} млн ₽`;
-    }
-    return `${formatInteger.format(value)} ₽`;
+    if (value >= 1_000_000_000) return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value / 1_000_000_000)} млрд ₽`;
+    if (value >= 1_000_000) return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value / 1_000_000)} млн ₽`;
+    return `${integer.format(value)} ₽`;
   };
 
-  const ordersFor = () => Math.round(markets[state.market].size * state.share / 100);
+  const formatShare = (orders) => {
+    const share = orders / MARKET_SIZE * 100;
+    return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: share < 0.1 ? 3 : 1 }).format(share)}%`;
+  };
+
+  const scenarioLabels = {
+    150: "10 партнёров × 15 свадеб",
+    500: "Рабочий масштаб · 500 свадеб",
+    880: "0,1% рынка России",
+    8800: "1% рынка России",
+  };
 
   function selectButton(control, selected) {
     document.querySelectorAll(`[data-control="${control}"] button`).forEach((button) => {
@@ -30,27 +34,17 @@
   }
 
   function updateCalculator(animate = true) {
-    const orders = ordersFor();
-    const revenue = orders * state.price;
-    const costs = orders * state.cost;
+    const revenue = state.orders * state.price;
+    const costs = state.orders * state.cost;
     const net = Math.max(0, revenue - costs);
-    const partner = Math.round(net * 0.4);
-    const studio = net - partner;
+    const partner = Math.round(net * PARTNER_SHARE);
 
-    document.querySelector("#scenarioLabel").textContent = `${markets[state.market].label} · ${String(state.share).replace(".", ",")}% рынка`;
-    document.querySelector("#ordersResult").textContent = formatInteger.format(orders);
-    document.querySelector("#monthlyResult").textContent = `≈${formatInteger.format(Math.max(1, Math.round(orders / 12)))}`;
+    document.querySelector("#scenarioLabel").textContent = scenarioLabels[state.orders] || `${integer.format(state.orders)} заказов`;
+    document.querySelector("#partnerResult").textContent = formatMoney(partner);
     document.querySelector("#revenueResult").textContent = formatMoney(revenue);
     document.querySelector("#costResult").textContent = formatMoney(costs);
     document.querySelector("#netResult").textContent = formatMoney(net);
-    document.querySelector("#partnerResult").textContent = formatMoney(partner);
-    document.querySelector("#studioResult").textContent = formatMoney(studio);
-    document.querySelector("#partnerMonthly").textContent = `≈${formatMoney(Math.round(partner / 12))} в месяц`;
-    document.querySelector("#studioMonthly").textContent = `≈${formatMoney(Math.round(studio / 12))} в месяц`;
-
-    document.querySelectorAll("[data-share-jump]").forEach((card) => {
-      card.classList.toggle("active", Number(card.dataset.shareJump) === state.share);
-    });
+    document.querySelector("#marketShareResult").textContent = formatShare(state.orders);
 
     if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       resultPanel.classList.remove("is-updating");
@@ -61,21 +55,9 @@
   document.querySelectorAll("[data-control] button").forEach((button) => {
     button.addEventListener("click", () => {
       const control = button.parentElement.dataset.control;
-      const value = button.dataset.value;
-      state[control] = control === "market" ? value : Number(value);
+      state[control] = Number(button.dataset.value);
       selectButton(control, state[control]);
       updateCalculator();
-    });
-  });
-
-  document.querySelectorAll("[data-share-jump]").forEach((card) => {
-    card.addEventListener("click", () => {
-      state.market = "russia";
-      state.share = Number(card.dataset.shareJump);
-      selectButton("market", state.market);
-      selectButton("share", state.share);
-      updateCalculator();
-      document.querySelector("#calculator").scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     });
   });
 
